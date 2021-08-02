@@ -1,0 +1,51 @@
+//#include <ESP8266WiFi.h>
+#include <ThingerESP8266.h>
+#include "DHT.h"
+#define USERNAME "Dheeraj333"
+#define DEVICE_ID "ESP8266"
+#define DEVICE_CREDENTIAL "SpkkB%01wuWR"
+
+#define SSID "Lenevo"
+#define SSID_PASSWORD "94158232801"
+#define DHTPIN D1
+#define DHTTYPE DHT11
+DHT dht(DHTPIN, DHTTYPE);
+
+ThingerESP8266 thing(USERNAME, DEVICE_ID, DEVICE_CREDENTIAL);
+
+void setup() {
+ pinMode(LED_BUILTIN, OUTPUT);
+  dht.begin();
+
+  thing.add_wifi(SSID, SSID_PASSWORD);
+
+  // digital pin control example (i.e. turning on/off a light, a relay, configuring a parameter, etc)
+  //thing["led"] <<[](pson& in){ digitalWrite(BUILTIN_LED, in? LOW : HIGH);};
+
+  // resource output example (i.e. reading a sensor value)
+ //thing["millis"] >>[](pson& out) {out=millis(); };
+
+  // more details at http://docs.thinger.io/arduino/
+ // thing["in_out"]=[](pson& in, pson& out){
+   // out["sum"]=(long)in["value1"]+(long)in["value2"];
+    //out["mult"]=(long)in["value1"]*(long)in["value2"];
+      //define a new resource for reading from DHT11 sensor
+  /*thing["dht11"] >> [](pson& out){
+    out["humidity"] = dht.readHumidity();
+    out["celsius"] = dht.readTemperature();
+    out["fahrenheit"] = dht.readTemperature(true);
+  };*/
+ 
+} 
+
+
+
+void loop() {
+     //define a new resource for reading from DHT11 sensor
+    thing["dht11"] >> [](pson& out){
+    out["humidity"] = dht.readHumidity();
+    out["celsius"] = dht.readTemperature();
+    out["fahrenheit"] = dht.readTemperature(true);
+    };
+  thing.handle();
+    }
